@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Error: Swift.Error {
+public enum BuildkiteError: Swift.Error {
     case missingEnvironmentKey(Environment.Key)
     case underlying(Swift.Error)
     case unknown

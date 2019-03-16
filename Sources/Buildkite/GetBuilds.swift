@@ -14,7 +14,7 @@ extension Pipeline {
     ///   - pipeline: a `Pipeline` value.
     ///   - filters: and array of query filters
     ///   - completion: block which receives an array of `Build` values as a successful Result.
-    public func builds(with filters: [API.Builds.Filter] = [], completion: @escaping (Result<[Build], Error>) -> Void) {
+    public func builds(with filters: [API.Builds.Filter] = [], completion: @escaping (Result<[Build], BuildkiteError>) -> Void) {
         API.Builds.get(in: self, with: filters, completion: completion)
     }
 }
@@ -28,7 +28,7 @@ extension API.Builds {
     ///   - pipeline: a `Pipeline` value.
     ///   - filters: and array of query filters
     ///   - completion: block which receives an array of `Build` values as a successful Result.
-    static func get(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared, completion: @escaping (Result<[Build], Error>) -> Void) {
+    static func get(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared, completion: @escaping (Result<[Build], BuildkiteError>) -> Void) {
 
         let api = Environment.Read(.apiKey)
         let get = pipeline.builds(with: filters, session: session)
