@@ -2,7 +2,7 @@ import Foundation
 
 extension URL {
 
-    public enum DecodingError: Error {
+    public enum DecodingError: Swift.Error {
         case invalidURLString(String)
     }
 

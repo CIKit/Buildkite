@@ -2,15 +2,13 @@ import Foundation
 import Result
 import ProcedureKit
 import ProcedureKitNetwork
-import Utilities
-import Domain
 
 
 // MARK: - Functional API
 
 extension API.Builds {
 
-    public static func get(for commit: LongHash, _ state: Build.State? = .passed, in pipeline: Pipeline, completion: @escaping (Result<[Build], Error>) -> Void) {
+    public static func get(for commit: LongHash, _ state: Build.State? = .passed, in pipeline: Pipeline, completion: @escaping (Result<[Build], BuildkiteError>) -> Void) {
 
         let api = Environment.Read(.apiKey)
         let get = GetCommit(for: commit, state, in: pipeline)
@@ -26,7 +24,7 @@ extension API.Builds {
         API.queue.addOperations(api, get)
     }
 
-    public static func passed(commit: LongHash, in pipeline: Pipeline, completion: @escaping (Result<Bool, Error>) -> Void) {
+    public static func passed(commit: LongHash, in pipeline: Pipeline, completion: @escaping (Result<Bool, BuildkiteError>) -> Void) {
 
         let api = Environment.Read(.apiKey)
         let get = Passed(for: commit, in: pipeline)

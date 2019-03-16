@@ -46,6 +46,6 @@ extension Organization: ExpressibleByStringLiteral {
 
 // MARK: - Operator
 
-func +(lhs: Organization, rhs: String) -> Pipeline {
+public func +(lhs: Organization, rhs: String) -> Pipeline {
     return Pipeline(organization: lhs, slug: rhs)
 }

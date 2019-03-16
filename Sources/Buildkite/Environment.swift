@@ -68,7 +68,7 @@ extension Environment {
         public init(_ key: Environment.Key) {
             super.init {
                 guard let result = Environment.read(key) else {
-                    throw Error.missingEnvironmentKey(key)
+                    throw BuildkiteError.missingEnvironmentKey(key)
                 }
                 return result
             }
