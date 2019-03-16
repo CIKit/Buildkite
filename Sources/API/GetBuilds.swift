@@ -8,6 +8,19 @@ import Domain
 
 // MARK: - Functional API
 
+extension Pipeline {
+
+    /// Gets Buildkite builds
+    ///
+    /// - Parameters:
+    ///   - pipeline: a `Pipeline` value.
+    ///   - filters: and array of query filters
+    ///   - completion: block which receives an array of `Build` values as a successful Result.
+    public func builds(with filters: [API.Builds.Filter] = [], completion: @escaping (Result<[Build], Error>) -> Void) {
+        API.Builds.get(in: self, with: filters, completion: completion)
+    }
+}
+
 extension API.Builds {
 
 
@@ -17,10 +30,10 @@ extension API.Builds {
     ///   - pipeline: a `Pipeline` value.
     ///   - filters: and array of query filters
     ///   - completion: block which receives an array of `Build` values as a successful Result.
-    public static func get(in pipeline: Pipeline, filters: [Filter] = [], completion: @escaping (Result<[Build], Error>) -> Void) {
+    static func get(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared, completion: @escaping (Result<[Build], Error>) -> Void) {
 
         let api = Environment.Read(.apiKey)
-        let get = Get(pipeline: pipeline, filters: filters).injectResult(from: api)
+        let get = pipeline.builds(with: filters, session: session)
 
         get.addDidFinishBlockObserver { (get, error) in
             guard let builds = get.output.success else {
@@ -39,6 +52,13 @@ extension API.Builds {
 
 // MARK: Procedure
 
+extension Pipeline {
+
+    public func builds(with filters: [API.Builds.Filter] = [], session: NetworkSession = URLSession.shared) -> API.Builds.Get {
+        return API.Builds.Get(in: self, with: filters, session: session)
+    }
+}
+
 extension API.Builds {
 
     public final class Get: GroupProcedure, InputProcedure, OutputProcedure {
@@ -46,7 +66,7 @@ extension API.Builds {
         public var input: Pending<API.Key> = .pending
         public var output: Pending<ProcedureResult<[Build]>> = .pending
 
-        public init(session: NetworkSession = URLSession.shared, pipeline: Pipeline, filters: [Filter] = []) {
+        public init(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared) {
 
             guard let url = URL(string: "builds", relativeTo: pipeline.url(relativeTo: API.server)) else {
                 fatalError("Unable to create URL for Buildkite builds")
