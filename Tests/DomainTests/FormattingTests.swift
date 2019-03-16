@@ -1,9 +1,9 @@
 import XCTest
 import class Foundation.Bundle
 
-@testable import Buildkite
+@testable import Domain
 
-final class BuildkiteDateFormatterTests: XCTestCase {
+final class FormatterTests: XCTestCase {
 
     func test__buildkite_date_formatter() {
         let formatter: DateFormatter = .buildkiteDateFormatter
