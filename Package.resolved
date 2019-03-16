@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ProcedureKit",
+        "repositoryURL": "https://github.com/ProcedureKit/ProcedureKit",
+        "state": {
+          "branch": "development",
+          "revision": "9a3e93e8c0b53efed4bf3d4d3e5dcf045b720d7a",
+          "version": null
+        }
+      },
+      {
+        "package": "Result",
+        "repositoryURL": "https://github.com/antitypical/Result",
+        "state": {
+          "branch": null,
+          "revision": "2ca499ba456795616fbc471561ff1d963e6ae160",
+          "version": "4.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
