@@ -10,6 +10,13 @@ import Domain
 
 extension API.Builds {
 
+
+    /// Gets Buildkite builds
+    ///
+    /// - Parameters:
+    ///   - pipeline: a `Pipeline` value.
+    ///   - filters: and array of query filters
+    ///   - completion: block which receives an array of `Build` values as a successful Result.
     public static func get(in pipeline: Pipeline, filters: [Filter] = [], completion: @escaping (Result<[Build], Error>) -> Void) {
 
         let api = Environment.Read(.apiKey)
