@@ -13,7 +13,7 @@ final class CommandStepTests: XCTestCase {
         encoder = YAMLEncoder()
         decoder = YAMLDecoder()
     }
-    
+        
     override func tearDown() {
         step = nil
         encoder = nil
