@@ -10,12 +10,13 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/antitypical/Result", from: "4.1.0"),
+        .package(url: "https://github.com/jpsim/Yams", from: "1.0.1"),
         .package(url: "https://github.com/ProcedureKit/ProcedureKit", .branch("development"))
     ],
     targets: [
         .target(
             name: "Buildkite",
-            dependencies: ["ProcedureKit", "ProcedureKitNetwork", "Result"]),
+            dependencies: ["ProcedureKit", "ProcedureKitNetwork", "Result", "Yams"]),
         .testTarget(
             name: "BuildkiteTests",
             dependencies: ["Buildkite", "TestingProcedureKit"]),

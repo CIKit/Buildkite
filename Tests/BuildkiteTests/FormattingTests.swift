@@ -1,6 +1,4 @@
 import XCTest
-import class Foundation.Bundle
-
 @testable import Buildkite
 
 final class FormatterTests: XCTestCase {
