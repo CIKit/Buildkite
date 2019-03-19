@@ -10,7 +10,6 @@ extension API.Builds {
 
     public static func get(for commit: LongHash, _ state: Build.State? = .passed, in pipeline: Pipeline, completion: @escaping (Result<[Build], BuildkiteError>) -> Void) {
 
-        let api = Environment.Read(.apiKey)
         let get = GetCommit(for: commit, state, in: pipeline)
 
         get.addDidFinishBlockObserver { (get, error) in
@@ -21,12 +20,11 @@ extension API.Builds {
             completion(.success(builds))
         }
 
-        API.queue.addOperations(api, get)
+        API.queue.addOperations(get)
     }
 
     public static func passed(commit: LongHash, in pipeline: Pipeline, completion: @escaping (Result<Bool, BuildkiteError>) -> Void) {
 
-        let api = Environment.Read(.apiKey)
         let get = Passed(for: commit, in: pipeline)
 
         get.addDidFinishBlockObserver { (get, error) in
@@ -37,7 +35,7 @@ extension API.Builds {
             completion(.success(builds))
         }
 
-        API.queue.addOperations(api, get)
+        API.queue.addOperations(get)
     }
 }
 
@@ -47,9 +45,8 @@ extension API.Builds {
 
 extension API.Builds {
 
-    public final class GetCommit: GroupProcedure, InputProcedure, OutputProcedure {
+    public final class GetCommit: GroupProcedure, OutputProcedure {
 
-        public var input: Pending<API.Key> = .pending
         public var output: Pending<ProcedureResult<[Build]>> = .pending
 
         public init(for commit: LongHash, _ state: Build.State? = .passed, in pipeline: Pipeline, session: NetworkSession = URLSession.shared) {
@@ -63,14 +60,12 @@ extension API.Builds {
 
             super.init(operations: [get])
 
-            bind(to: get)
             bind(from: get)
         }
     }
 
-    public final class Passed: GroupProcedure, InputProcedure, OutputProcedure {
+    public final class Passed: GroupProcedure, OutputProcedure {
 
-        public var input: Pending<API.Key> = .pending
         public var output: Pending<ProcedureResult<Bool>> = .pending
 
         public init(for commit: LongHash, in pipeline: Pipeline, session: NetworkSession = URLSession.shared) {
@@ -84,10 +79,8 @@ extension API.Builds {
                 return true
             }.injectResult(from: get)
 
-
             super.init(operations: [get, parse])
 
-            bind(to: get)
             bind(from: parse)
         }
     }

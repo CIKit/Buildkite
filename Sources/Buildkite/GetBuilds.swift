@@ -30,7 +30,6 @@ extension API.Builds {
     ///   - completion: block which receives an array of `Build` values as a successful Result.
     static func get(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared, completion: @escaping (Result<[Build], BuildkiteError>) -> Void) {
 
-        let api = Environment.Read(.apiKey)
         let get = pipeline.builds(with: filters, session: session)
 
         get.addDidFinishBlockObserver { (get, error) in
@@ -41,7 +40,7 @@ extension API.Builds {
             completion(.success(builds))
         }
 
-        API.queue.addOperations(api, get)
+        API.queue.addOperations(get)
     }
 }
 
@@ -59,9 +58,8 @@ extension Pipeline {
 
 extension API.Builds {
 
-    public final class Get: GroupProcedure, InputProcedure, OutputProcedure {
+    public final class Get: GroupProcedure, OutputProcedure {
 
-        public var input: Pending<API.Key> = .pending
         public var output: Pending<ProcedureResult<[Build]>> = .pending
 
         public init(in pipeline: Pipeline, with filters: [Filter] = [], session: NetworkSession = URLSession.shared) {
@@ -70,7 +68,10 @@ extension API.Builds {
                 fatalError("Unable to create URL for Buildkite builds")
             }
 
+            let api = Environment.Read(.apiKey)
+            
             let makeURLRequest = MakeURLRequest(url: url.appendingQueryParameters(filters.URLQueryParameters))
+                .injectResult(from: api)
 
             let get = NetworkProcedure { NetworkDataProcedure(session: session) }
                 .injectResult(from: makeURLRequest)
@@ -78,9 +79,8 @@ extension API.Builds {
             let decode = DecodeJSONProcedure<[Build]>(dateDecodingStrategy: .formatted(.buildkiteDateFormatter))
                 .injectPayload(fromNetwork: get)
 
-            super.init(operations: [makeURLRequest, get, decode])
+            super.init(operations: [api, makeURLRequest, get, decode])
 
-            bind(to: makeURLRequest)
             bind(from: decode)
 
             #if DEBUG
