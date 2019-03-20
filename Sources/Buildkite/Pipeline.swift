@@ -14,6 +14,6 @@ public struct Pipeline {
 extension Pipeline {
 
     public func url(relativeTo baseURL: URL?) -> URL? {
-        return URL(string: "organizations/\(organization.slug)/pipelines/\(slug)", relativeTo: baseURL)
+        return URL(string: "organizations/\(organization.slug)/pipelines/\(slug)/", relativeTo: baseURL)
     }
 }
